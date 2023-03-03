@@ -1,20 +1,24 @@
-import react from "react";
+// import react from "react";
 import { useState } from "react";
 import { supabase } from "./../src/pages/api/supabaseCient";
 
-export default function Auth() {
-  const [email, setEmail] = useState(" ");
-  const [password, setPassword] = useState(" ");
-  const [isSingup, setIsSingUp] = useState(true);
 
-  const hangleSignup = async () => {
+export default function Auth() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSignUp, setIsSignUp] = useState(true);
+
+
+  
+  const hangleSignUp = async () => {
     try {
+      //esto viene de la doc de supabase
       let { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
+        email,
+        password,
       });
 
-      alert("Check your email");
+      alert("Check your email to confirm Sign Up");
 
       if (error) throw error;
     } catch (e) {
@@ -24,34 +28,36 @@ export default function Auth() {
 
   const hangleSignIn = async () => {
     try {
-      let { data, error } = await supabase.auth.signInwithPassword({
-        email: email,
-        password: password,
+      let { user, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
-
+  
       if (error) throw error;
       alert("User logged.");
-      console.log(user);
-      console.log(session);
+      console.log("hey estoy loggueado");
+      console.log(user)
+      // console.log(session)
     } catch (e) {
       alert(e.message);
     }
   };
 
   const changeForm = () => {
-    setIsSingUp((value) => !value);
+    //setear el estado de isSingUp
+    setIsSignUp((value) => !value);
   };
 
   return (
     <div>
-      <h1>{isSingup ? "Sign Up" : "Sign In"}</h1>
+      <h1>{isSignUp ? "Sign Up" : "Sign In"}</h1>
 
       <div className="field">
         <label htmlFor="">Email</label>
         <input
           type="text"
           name=""
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={e => setEmail(e.target.value)}
           value={email}
         />
 
@@ -60,17 +66,20 @@ export default function Auth() {
           <input
             type="password"
             name=""
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
             value={password}
           />
         </div>
 
-        {isSingup && <button onClick={hangleSignup}>Sign Up</button>}
+      {/* fase 1 */}
+        {/* <button onClick={hangleSignUp}>Sign Up</button> */}
 
-        {!isSingup && <button onClick={hangleSignIn}>Sign In</button>}
+        {isSignUp && <button onClick={hangleSignUp}>Sign Up</button>}
+
+        {!isSignUp && <button onClick={hangleSignIn}>Sign In</button>}
 
         <a href="#" onClick={changeForm}>
-          {isSingup
+          {isSignUp
             ? "Do you already have an account? Sign In"
             : "You are new? Sign Up"}
         </a>
